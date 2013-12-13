@@ -40,10 +40,14 @@ function init(){
 						toggleEdit: 'Toggle Edit Mode',
 						toggleFullscreen: 'Enter Fullscreen'
 					},
-					autogrow: true
+					autogrow: {
+						minHeight:150,
+						maxHeight:500,
+						scroll:true
+					}
 				}
 	editor = new EpicEditor(opts);
-		
+	closedState();
 }
 
 function decryptDiary(){
@@ -51,24 +55,22 @@ function decryptDiary(){
 	console.log(passphrase);
 	if(passphrase == null || passphrase == "" || passphrase.length < 1){
 		alert("enter a passphrase");
-	}else{
-		decrypt(window.localStorage.getItem("triplesecdiary"), passphrase, function (clearjson){
+	}else{		
+		var cipherDiary = window.localStorage.getItem("triplesecdiary");
+		decrypt(cipherDiary, passphrase, function (clearjson){
 				if(clearjson != null && clearjson.length > 0){
 					diary = JSON.parse(clearjson);
 					sortDiaryEntries();
 					refreshDiary();
 					$("#savingProgress").text("Decryption complete");
+					openState();
 				}else{
 					diary = {'entries':[]}
-					greetNewUser();
+					console.log(diary);
+					newDiaryState();
 				}				
 			});	
 	}
-}
-
-function greetNewUser(){
-	$("#savingProgress").text("Welcome - try making your first entry:");
-	newEntry();
 }
 
 function percentDone(obj){
@@ -82,7 +84,7 @@ function decrypt(ciphertext, passphrase, func){
 	if(ciphertext != null && ciphertext.length > 0){
 		triplesec.decrypt ({
 			data:          new triplesec.Buffer(ciphertext, "hex"),
-			key:           new triplesec.Buffer(),    
+			key:           new triplesec.Buffer(passphrase),    
 			progress_hook: function (obj) { console.log("decrypting");percentDone(obj); }
 
 		}, function (err, buff) {
@@ -101,7 +103,8 @@ function decrypt(ciphertext, passphrase, func){
 
 function encrypt(obj, passphrase, func){
 	working = true;
-	if(obj.entry == null || obj.entry == "" || obj.entry.length < 1){
+	if(obj.entries == null || obj.entries.length < 1){
+		console.log("no entries found");
 		func("");
 		working=false;
 	}else{
@@ -144,6 +147,11 @@ function sortDiaryEntries(){
 
 function newEntry(){
 	editor.load();
+	editingState();
+}
+
+function cancelEntry(){
+	editor.unload();
 }
 
 function saveEntry(){	
@@ -153,25 +161,53 @@ function saveEntry(){
 		alert("enter a passphrase");
 	}else if(passphrase.length < 8){
 		alert("this passphrase is weaksauce, do better");
-	}else{
+	}else if(diary != null){
 	
 		var cleartext = editor.getText();
 		var now = new Date();
 		var sortableDate = now.toISOString();
 		var clearEntry = {'time':now, 'sortTime': sortableDate, 'entry':cleartext};
-		diary.entries.unshift(clearEntry);
+		if(diary.entries.length < 1){
+			diary.entries.push(clearEntry);
+		}else{
+			diary.entries.unshift(clearEntry);
+		}
 		refreshDiary();
 		editor.unload();
+		openState();
 		$("#epiceditor").height("0px");
 		
 		var cipherDiary = null;
+		console.log(diary);
 		encrypt(diary, passphrase, function (cipherDiary) {	
-			if(cipherDiary==""){
-				console.log("nothing changed");
-			}else{
-				window.localStorage.setItem("triplesecdiary", cipherDiary);
-				$("#savingProgress").text("Encryption complete");
-			}
+				if(cipherDiary==""){
+					console.log("nothing changed");
+				}else{
+					window.localStorage.setItem("triplesecdiary", cipherDiary);
+					$("#savingProgress").text("Encryption complete");
+				}			
 			});
 	}
+}
+
+function closedState(){
+	$("button.entryButton").hide();
+}
+
+function newDiaryState(){
+	$("button.entryButton").hide();
+	$("button#newEntry").show();
+	//walkthru should happen here
+	$("#savingProgress").text("Welcome - try making your first entry:");
+	newEntry();
+}
+
+function openState(){
+	$("button.entryButton").hide();
+	$("button#newEntry").show();
+}
+
+function editingState(){
+	$("button.entryButton").show();
+	$("button#newEntry").hide();
 }

@@ -45,12 +45,15 @@
     
     <div id="main" role="main">
 		<div>
-			<label for="passphrase">Passphrase: </label><input id="passphrase" name="passphrase"></input><button id="decryptDiary" onclick="decryptDiary()">Open</button>
+			<label for="passphrase">Passphrase: </label>
+			<input id="passphrase" name="passphrase"></input>
+			<button id="decryptDiary" onclick="decryptDiary()">Open</button>
 		</div>
 		<span id="savingProgress"></span>
 		<div>
-			<button id="newEntry" onclick="newEntry()">New Entry</button>
-			<button id="saveEntry" onclick="saveEntry()">Save Entry</button>
+			<button id="newEntry" class="entryButton" onclick="newEntry()">New</button>
+			<button id="saveEntry" class="entryButton" onclick="saveEntry()">Save</button>
+			<button id="cancelEntry" class="entryButton" onclick="cancelEntry()">Cancel</button>
 		</div>
 		<div id="epiceditor"></div>
 		<div id="diary"></div>
