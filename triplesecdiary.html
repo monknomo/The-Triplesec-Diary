@@ -21,6 +21,9 @@
 <!-- /ht Jeremy Keith - http://front.ie/mLXiaS -->
 <link rel="stylesheet" href="css/global.css" media="all">
 <link rel="stylesheet" href="css/layout.css" media="all and (min-width: 33.236em)">
+<link rel="stylesheet" href="css/pure-0.3.0/base-min.css">
+<link rel="stylesheet" href="css/pure-0.3.0/base-context-min.css">
+<link rel="stylesheet" href="css/pure-0.3.0/forms-min.css">
 <!-- 30em + (1.618em * 2) = 33.236em / Eliminates potential of horizontal scrolling in most cases -->
 
 <!--[if (lt IE 9) & (!IEMobile)]>
@@ -44,10 +47,20 @@
 	</header>
     
     <div id="main" role="main">
-		<div>
-			<label for="passphrase">Passphrase: </label>
-			<input id="passphrase" name="passphrase"></input>
-			<button id="decryptDiary" onclick="decryptDiary()">Open</button>
+		<div id="openDiary">
+            <form class="pure-form pure-form-aligned">
+                <fieldset>
+                    <div  class="pure-control-group">
+                        <label for="passphrase">Passphrase: </label>
+                        <input id="passphrase" name="passphrase" type="password"></input>                
+                    </div  class="pure-control-group">
+                    <div class="pure-control-group" id="passphraseConfirmGroup">
+                        <label for="passphraseConfirm">Confirm Passphrase: </label>
+                        <input id="passphraseConfirm" name="passphraseConfirm" type="password"></input>
+                    </div  class="pure-controls">
+                    <div><button id="decryptDiary" onclick="decryptDiary_onclick()" type="button">Open</button></div>                
+                </fieldset>
+			</form>
 		</div>
 		<span id="savingProgress"></span>
 		<div>

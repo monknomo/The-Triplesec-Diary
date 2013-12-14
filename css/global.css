@@ -107,6 +107,10 @@ a:active, a:focus { outline: none; }
 	width:80%;
 }
 
+#passphraseConfirm{
+    width:80%;
+}   
+
 #epiceditor{
 	height:200px;
 }
