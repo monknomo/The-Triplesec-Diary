@@ -55,6 +55,21 @@ function init(){
     }
 }
 
+function handle_passphraseKeypress(){
+    if(window.event) // IE8 and earlier
+	{
+        x=event.keyCode;
+	}
+    else if(event.which) // IE9/Firefox/Chrome/Opera/Safari
+	{
+        x=event.which;
+	}
+    //if its the enter key decrypt
+    if(x == 13){
+        decryptDiary_onclick();
+    }
+}
+
 function helloworld(){
     alert("hello, world");
 }
@@ -165,7 +180,7 @@ function refreshDiary(){
 		entryHtml += diary.entries[i].time;
 		entryHtml += "</div><div class='entryText'>"
 		entryHtml += marked(diary.entries[i].entry);
-		entryHtml += "</div></div>"
+		entryHtml += "</div><div><button>Edit</button><button>Delete</button></div></div>"
 		diaryDiv.append(entryHtml);
 	}
 }
@@ -176,13 +191,14 @@ function sortDiaryEntries(){
 	});
 }
 
-function newEntry(){
-	editor.load();
+function newEntry(){	
 	editingState();
+    editor.load();
 }
 
-function cancelEntry(){
-	editor.unload();
+function cancelEntry(){	
+    openState();
+    editor.unload();
 }
 
 function saveEntry(){	
@@ -203,10 +219,9 @@ function saveEntry(){
 		}else{
 			diary.entries.unshift(clearEntry);
 		}
-		refreshDiary();
-		editor.unload();
+		refreshDiary();		
 		openState();
-		$("#epiceditor").height("0px");
+        editor.unload();
 		
 		var cipherDiary = null;
 		console.log(diary);
@@ -230,12 +245,14 @@ function closedState(){
 	$("button.entryButton").hide();
     $("#openDiary").show();
     $("#passphraseConfirmGroup").hide();
+    $("#epiceditor").hide();
 }
 
 function createNewDiaryState(){
     $("#openDiary").show();
     $("#decryptDiary").text("New Diary"); 
     $("button.entryButton").hide();   
+    $("#epiceditor").hide();
 }
 
 function newDiaryState(){
@@ -243,19 +260,26 @@ function newDiaryState(){
 	$("button.entryButton").hide();
 	$("button#newEntry").show();
     $("#openDiary").hide();
+    $("#epiceditor").show();
 	//walkthru should happen here
 	$("#savingProgress").text("Welcome - try making your first entry:");
 	newEntry();
+   
 }
 
 function openState(){
 	$("button.entryButton").hide();
 	$("button#newEntry").show();
     $("#openDiary").hide();
+    //$("#epiceditor").removeClass("open");
+    //$("#epiceditor").addClass("closed");
+    $("#epiceditor").hide();
 }
 
 function editingState(){
 	$("button.entryButton").show();
 	$("button#newEntry").hide();
     $("#openDiary").hide();
+    $("#epiceditor").show();
+    //$("#epiceditor").removeClass("closed");
 }

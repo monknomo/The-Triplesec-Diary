@@ -52,7 +52,7 @@
                 <fieldset>
                     <div  class="pure-control-group">
                         <label for="passphrase">Passphrase: </label>
-                        <input id="passphrase" name="passphrase" type="password"></input>                
+                        <input id="passphrase" name="passphrase" type="password" onkeypress="handle_passphraseKeypress()"></input>                
                     </div  class="pure-control-group">
                     <div class="pure-control-group" id="passphraseConfirmGroup">
                         <label for="passphraseConfirm">Confirm Passphrase: </label>
@@ -64,7 +64,7 @@
 		</div>
 		<span id="savingProgress"></span>
 		<div>
-			<button id="newEntry" class="entryButton" onclick="newEntry()">New</button>
+			<button id="newEntry" class="entryButton" onclick="newEntry()">New Entry</button>
 			<button id="saveEntry" class="entryButton" onclick="saveEntry()">Save</button>
 			<button id="cancelEntry" class="entryButton" onclick="cancelEntry()">Cancel</button>
 		</div>
