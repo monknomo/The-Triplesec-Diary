@@ -53,6 +53,9 @@ function init(){
     }else{
         closedState();
     }
+    $(document).jkey('ctrl+s', function(){
+        console.log("hi");
+    });
 }
 
 function handle_passphraseKeypress(){
@@ -90,10 +93,19 @@ function deleteEntry(obj){
     }
 }
 
-function editEntry(obj){
+function editEntry_buttonClick(obj){
     console.log(obj.id);
     var entryTime = obj.id.substring(5);
+    editEntry(entryTime);
+}
+
+function editEntry_doubleClick(obj){
+    var entryTime = obj.id.substring(6);
     console.log(entryTime);
+    editEntry(entryTime);
+}
+
+function editEntry(entryTime){
     var entryIndex = -1;
     for(var i = 0; i < diary.entries.length; i++){
         if( diary.entries[i].sortTime == entryTime ){
@@ -240,11 +252,13 @@ function refreshDiary(){
 	diaryDiv.empty();	
 	for(var i = 0; i < diary.entries.length; i++){		
 		console.log(diary.entries[i]);
-		var entryHtml = "<div class='entry'><div class='entryTime'>";
+		var entryHtml = "<div class='entry' id='entry_" 
+        entryHtml += diary.entries[i].sortTime
+        entryHtml += "' ondblclick='editEntry_doubleClick(this)'><div class='entryTime'>";
 		entryHtml += isoDateStringToDate(diary.entries[i].sortTime);
 		entryHtml += "</div><div class='entryText'>"
 		entryHtml += marked(diary.entries[i].entry);
-		entryHtml += "</div><div><button onclick='editEntry(this)' id='edit_"
+		entryHtml += "</div><div><button onclick='editEntry_buttonClick(this)' id='edit_"
         entryHtml += diary.entries[i].sortTime
         entryHtml += "'>Edit</button><button onclick='deleteEntry(this)' id='delete_"
         entryHtml += diary.entries[i].sortTime

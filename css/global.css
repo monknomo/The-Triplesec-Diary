@@ -56,7 +56,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 ----------------------------------------------------------------------------------------*/
 html { 
   overflow-y: scroll;
-  background: #FFF;
+  background:#C0C0C0
   }
 
 /* /ht Ethan Marcotte - http://front.ie/l8rJaA */
@@ -130,6 +130,7 @@ a:active, a:focus { outline: none; }
     padding-right:.75em;
     padding-bottom:.3em;
     max-width:28em;
+    background:#F8F8FF;
 }
 
 

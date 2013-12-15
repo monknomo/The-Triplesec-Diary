@@ -6,11 +6,24 @@
 	max-width: 60em;
 	}
 
+.entry{
+    max-width:58em;
+}
+
 
 /* 9. CUSTOM LAYOUT & TYPOGRAPHY (Mummy bear)
 ----------------------------------------------------------------------------------------*/
 @media screen and (min-width: 30em) and (max-width: 63.236em) {
 
-#container { width: 30em; }
+    #container { 
+        min-width:30em;
+        width: 80%; 
+    }
+
+    .entry{
+        min-width:28em;
+        width:80%;
+        max-width:58em;
+    }
 	
 }
