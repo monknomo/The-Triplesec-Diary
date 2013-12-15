@@ -103,6 +103,20 @@ a:active, a:focus { outline: none; }
 
 /* 5. GLOBAL LAYOUT & GLOBAL CUSTOM TYPOGRAPHY
 ----------------------------------------------------------------------------------------*/
+
+.toolbar{
+    width:100%;
+    text-align:right;
+    height:1.5em;
+    background:#F8F8FF;
+    padding-right:.3em;
+    
+    -moz-border-radius: .25em;
+    -webkit-border-radius: .25em;
+    -khtml-border-radius: .25em;
+    border-radius: .25em;
+}
+
 #passphrase{
 	width:80%;
 }
@@ -122,7 +136,7 @@ a:active, a:focus { outline: none; }
 }
 
 .entry{
-    outline:black solid thin;
+    //outline:black solid thin;
     margin-top:1em;
     margin-bottom:.5em;
     padding-top:.3em;
@@ -131,6 +145,28 @@ a:active, a:focus { outline: none; }
     padding-bottom:.3em;
     max-width:28em;
     background:#F8F8FF;
+    
+    -moz-border-radius: .25em;
+    -webkit-border-radius: .25em;
+    -khtml-border-radius: .25em;
+    border-radius: .25em;
+}
+
+.help{
+    //outline:black solid thin;
+    margin-top:1em;
+    margin-bottom:.5em;
+    padding-top:.3em;
+    padding-left:.75em;
+    padding-right:.75em;
+    padding-bottom:.3em;
+    max-width:28em;
+    background:#F8F8FF;
+    
+    -moz-border-radius: .25em;
+    -webkit-border-radius: .25em;
+    -khtml-border-radius: .25em;
+    border-radius: .25em;
 }
 
 

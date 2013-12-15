@@ -10,6 +10,10 @@
     max-width:58em;
 }
 
+.help{
+    max-width:58em;
+}
+
 
 /* 9. CUSTOM LAYOUT & TYPOGRAPHY (Mummy bear)
 ----------------------------------------------------------------------------------------*/
@@ -21,6 +25,12 @@
     }
 
     .entry{
+        min-width:28em;
+        width:80%;
+        max-width:58em;
+    }
+    
+    .help{
         min-width:28em;
         width:80%;
         max-width:58em;
