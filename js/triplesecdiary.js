@@ -2,7 +2,7 @@ var editor = null;
 var defaultFilename = 'epiceditor';
 var diary = null;
 var editing = false;
-var editingEntry = {};
+var editingEntry = null;
 var working = false;
 var savingProgress = 0;
 function init(){
@@ -72,6 +72,40 @@ function handle_passphraseKeypress(){
 
 function helloworld(){
     alert("hello, world");
+}
+
+function deleteEntry(obj){
+    console.log(obj.id);
+    var entryTime = obj.id.substring(7);    
+    for(var i = 0; i < diary.entries.length; i++){
+        if( diary.entries[i].sortTime == entryTime ){
+            var passphrase = getPassphrase();
+            if(passphrase != null){
+                diary.entries.splice(i,1);
+                refreshDiary();
+                encryptDiary(passphrase);
+            }
+            break;
+        }
+    }
+}
+
+function editEntry(obj){
+    console.log(obj.id);
+    var entryTime = obj.id.substring(5);
+    console.log(entryTime);
+    var entryIndex = -1;
+    for(var i = 0; i < diary.entries.length; i++){
+        if( diary.entries[i].sortTime == entryTime ){
+            entryIndex = i;
+            break;
+        }
+    }
+    if(entryIndex > -1){
+        editEntryState();
+        editor.setText(diary.entries[entryIndex].entry);
+        editingEntry = entryIndex;
+    }
 }
 
 function decryptDiary_onclick(){
@@ -155,20 +189,38 @@ function decrypt(ciphertext, passphrase, func){
 
 function encrypt(obj, passphrase, func){
 	working = true;
-		var cleartext = JSON.stringify(obj);
-		var cipherEntry = null;		
-			
-		triplesec.encrypt ({
-			data:          new triplesec.Buffer(cleartext),
-			key:           new triplesec.Buffer(passphrase),
-			progress_hook: function (obj) { console.log("encrypting");percentDone(obj);}
+    var cleartext = JSON.stringify(obj);
+        
+    triplesec.encrypt ({
+        data:          new triplesec.Buffer(cleartext),
+        key:           new triplesec.Buffer(passphrase),
+        progress_hook: function (obj) { console.log("encrypting");percentDone(obj);}
 
-		}, function(err, buff) {	  
-			if (! err) { 
-				func(buff.toString('hex'));
-			}
-			working=false;
-		});
+    }, function(err, buff) {	  
+        if (! err) { 
+            func(buff.toString('hex'));
+        }
+        working=false;
+    });
+}
+
+function encryptDiary(passphrase){
+    var cipherDiary = null;
+    console.log(diary);
+    if(diary.entries == null || diary.entries.length < 1){
+        console.log("no entries found");
+        working=false;
+    }else{
+        encrypt(diary, passphrase, function (cipherDiary) {	
+                if(cipherDiary==""){
+                    console.log("nothing changed");
+                }else{
+                    console.log("diary saved");
+                    window.localStorage.setItem("triplesecdiary", cipherDiary);
+                    $("#savingProgress").text("Encryption complete");
+                }			
+            });
+    }
 }
 
 function refreshDiary(){	
@@ -177,10 +229,14 @@ function refreshDiary(){
 	for(var i = 0; i < diary.entries.length; i++){		
 		console.log(diary.entries[i]);
 		var entryHtml = "<div class='entry'><div class='entryTime'>";
-		entryHtml += diary.entries[i].time;
+		entryHtml += isoDateStringToDate(diary.entries[i].sortTime);
 		entryHtml += "</div><div class='entryText'>"
 		entryHtml += marked(diary.entries[i].entry);
-		entryHtml += "</div><div><button>Edit</button><button>Delete</button></div></div>"
+		entryHtml += "</div><div><button onclick='editEntry(this)' id='edit_"
+        entryHtml += diary.entries[i].sortTime
+        entryHtml += "'>Edit</button><button onclick='deleteEntry(this)' id='delete_"
+        entryHtml += diary.entries[i].sortTime
+        entryHtml += "'>Delete</button></div></div>"
 		diaryDiv.append(entryHtml);
 	}
 }
@@ -192,8 +248,8 @@ function sortDiaryEntries(){
 }
 
 function newEntry(){	
-	editingState();
-    editor.load();
+	newEntryState();
+    //editor.load();
 }
 
 function cancelEntry(){	
@@ -201,47 +257,53 @@ function cancelEntry(){
     editor.unload();
 }
 
-function saveEntry(){	
-	var passphrase = $("#passphrase").val();
+function getPassphrase(){
+    var passphrase = $("#passphrase").val();
 	console.log(passphrase);
 	if(passphrase == null || passphrase == "" || passphrase.length < 1){
 		alert("enter a passphrase");
+        return null;
 	}else if(passphrase.length < 8){
 		alert("this passphrase is weaksauce, do better");
-	}else if(diary != null){
-	
-		var cleartext = editor.getText();
-		var now = new Date();
-		var sortableDate = now.toISOString();
-		var clearEntry = {'time':now, 'sortTime': sortableDate, 'entry':cleartext};
-		if(diary.entries.length < 1){
-			diary.entries.push(clearEntry);
-		}else{
-			diary.entries.unshift(clearEntry);
-		}
-		refreshDiary();		
-		openState();
+        return null;
+    }
+    return passphrase;
+}
+
+function saveEntry(){	
+	var passphrase = getPassphrase();
+	if(diary != null && passphrase != null){
+        if(editing){
+            var cleartext = editor.getText();
+            var now = new Date();
+            var modifiedDate = now.toISOString();
+            diary.entries[editingEntry].entry = cleartext;
+            diary.entries[editingEntry].modified = modifiedDate;
+        }else{	
+            var cleartext = editor.getText();
+            var now = new Date();
+            var sortableDate = now.toISOString();
+            var clearEntry = {'sortTime': sortableDate, 'entry':cleartext, 'modified':sortableDate};
+            if(diary.entries.length < 1){
+                diary.entries.push(clearEntry);
+            }else{
+                diary.entries.unshift(clearEntry);
+            }        	            
+        }	
+        openState();
         editor.unload();
-		
-		var cipherDiary = null;
-		console.log(diary);
-        if(diary.entries == null || diary.entries.length < 1){
-            console.log("no entries found");
-            working=false;
-        }else{
-            encrypt(diary, passphrase, function (cipherDiary) {	
-                    if(cipherDiary==""){
-                        console.log("nothing changed");
-                    }else{
-                        window.localStorage.setItem("triplesecdiary", cipherDiary);
-                        $("#savingProgress").text("Encryption complete");
-                    }			
-                });
-        }
+        encryptDiary(passphrase);
+        refreshDiary();		
 	}
 }
 
+function isoDateStringToDate(isodate){
+    var startTime = new Date(isodate);
+    return new Date( startTime.getTime() + ( startTime.getTimezoneOffset() * 60000 ) );
+}
+
 function closedState(){
+    editing = false;
 	$("button.entryButton").hide();
     $("#openDiary").show();
     $("#passphraseConfirmGroup").hide();
@@ -249,25 +311,27 @@ function closedState(){
 }
 
 function createNewDiaryState(){
+    editing = false;
     $("#openDiary").show();
     $("#decryptDiary").text("New Diary"); 
     $("button.entryButton").hide();   
     $("#epiceditor").hide();
 }
 
-function newDiaryState(){
-    
+function newDiaryState(){    
 	$("button.entryButton").hide();
 	$("button#newEntry").show();
     $("#openDiary").hide();
     $("#epiceditor").show();
 	//walkthru should happen here
 	$("#savingProgress").text("Welcome - try making your first entry:");
+    editing = true;
 	newEntry();
    
 }
 
 function openState(){
+    editing = false;
 	$("button.entryButton").hide();
 	$("button#newEntry").show();
     $("#openDiary").hide();
@@ -276,10 +340,23 @@ function openState(){
     $("#epiceditor").hide();
 }
 
-function editingState(){
+function editorOpenState(){
 	$("button.entryButton").show();
 	$("button#newEntry").hide();
     $("#openDiary").hide();
     $("#epiceditor").show();
     //$("#epiceditor").removeClass("closed");
+}
+
+function newEntryState(){
+    editorOpenState();
+    editing = false;
+    editingEntry = null;
+    editor.load();
+}
+
+function editEntryState(){
+    editorOpenState();
+    editing=true;
+    editor.load();
 }

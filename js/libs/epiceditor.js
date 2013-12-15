@@ -1457,6 +1457,11 @@
 	return _getText(this.editor);
   }
   
+  EpicEditor.prototype.setText = function(content){
+      content = content || "";
+    return _setText(this.editor, content);
+  }
+  
   /**
    * Saves content for offline use
    * @returns {object} EpicEditor will be returned
