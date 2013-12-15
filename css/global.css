@@ -111,6 +111,16 @@ a:active, a:focus { outline: none; }
     width:80%;
 }   
 
+#diaryControls{
+    padding-top:.3em;
+    padding-bottom:.3em;
+}
+
+#entryControls{
+    padding-top:.3em;
+    padding-bottom:.3em;
+}
+
 .entry{
     outline:black solid thin;
     margin-top:1em;
@@ -119,7 +129,7 @@ a:active, a:focus { outline: none; }
     padding-left:.75em;
     padding-right:.75em;
     padding-bottom:.3em;
-    max-width:35em;
+    max-width:28em;
 }
 
 

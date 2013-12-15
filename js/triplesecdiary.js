@@ -108,6 +108,18 @@ function editEntry(obj){
     }
 }
 
+function closeDiary(){
+    $("#passphrase").val("");
+    $("#passphraseConfirm").val("");
+    $("#diary").empty();
+    diary = null;
+    editing = false;
+    editingEntry = null;
+    working = false;
+    closedState();
+    $("#savingProgress").text("");
+}
+
 function decryptDiary_onclick(){
     if(diary == null){
         var passphrase = $("#passphrase").val();
@@ -308,6 +320,7 @@ function closedState(){
     $("#openDiary").show();
     $("#passphraseConfirmGroup").hide();
     $("#epiceditor").hide();
+    $("#closeDiary").hide();
 }
 
 function createNewDiaryState(){
@@ -316,6 +329,7 @@ function createNewDiaryState(){
     $("#decryptDiary").text("New Diary"); 
     $("button.entryButton").hide();   
     $("#epiceditor").hide();
+    $("#closeDiary").hide();
 }
 
 function newDiaryState(){    
@@ -327,7 +341,7 @@ function newDiaryState(){
 	$("#savingProgress").text("Welcome - try making your first entry:");
     editing = true;
 	newEntry();
-   
+    $("#closeDiary").hide();
 }
 
 function openState(){
@@ -335,9 +349,8 @@ function openState(){
 	$("button.entryButton").hide();
 	$("button#newEntry").show();
     $("#openDiary").hide();
-    //$("#epiceditor").removeClass("open");
-    //$("#epiceditor").addClass("closed");
     $("#epiceditor").hide();
+    $("#closeDiary").show();
 }
 
 function editorOpenState(){
@@ -345,7 +358,7 @@ function editorOpenState(){
 	$("button#newEntry").hide();
     $("#openDiary").hide();
     $("#epiceditor").show();
-    //$("#epiceditor").removeClass("closed");
+    $("#closeDiary").show();
 }
 
 function newEntryState(){
