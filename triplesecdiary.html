@@ -42,7 +42,18 @@
 <body onload="init()">
   
   <div id="container" class="cf">
-    <div class="toolbar"><a href="help.html">Help</a></div>
+    <div class="toolbar">
+		<div id="settings"  class="toolbarItem">
+		<a href="settings.html">
+			<span class="emptySpanForLinking"><!-- This empty span has a 
+			background of an empty .gif and has a width/height of 100%, which 
+			allows the link to function when anywhere in the parent div is 
+			clicked-->
+			</span>
+		</a>
+		</div>
+		
+	</div>
     <header>
 		<h1>The Triplesec Diary</h1>
 	</header>
@@ -54,12 +65,14 @@
                     <div  class="pure-control-group">
                         <label for="passphrase">Passphrase: </label>
                         <input id="passphrase" name="passphrase" type="password" onkeypress="handle_passphraseKeypress()"></input>                
-                    </div  class="pure-control-group">
+                    </div>
                     <div class="pure-control-group" id="passphraseConfirmGroup">
                         <label for="passphraseConfirm">Confirm Passphrase: </label>
                         <input id="passphraseConfirm" name="passphraseConfirm" type="password"></input>
-                    </div  class="pure-controls">
-                    <div><button id="decryptDiary" onclick="decryptDiary_onclick()" type="button">Open</button></div>                
+                    </div>
+                    <div   class="pure-controls">
+						<button id="decryptDiary" onclick="decryptDiary_onclick()" type="button">Open</button>
+					</div>                
                 </fieldset>
 			</form>
 		</div>

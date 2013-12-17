@@ -56,6 +56,7 @@ function init(){
     $(document).jkey('ctrl+s', function(){
         console.log("hi");
     });
+	$("#passphrase").focus();
 }
 
 function handle_passphraseKeypress(){
@@ -258,9 +259,9 @@ function refreshDiary(){
 		entryHtml += isoDateStringToDate(diary.entries[i].sortTime);
 		entryHtml += "</div><div class='entryText'>"
 		entryHtml += marked(diary.entries[i].entry);
-		entryHtml += "</div><div><button onclick='editEntry_buttonClick(this)' id='edit_"
+		entryHtml += "</div><div><button onclick='editEntry_buttonClick(this)' class='entryControl' id='edit_"
         entryHtml += diary.entries[i].sortTime
-        entryHtml += "'>Edit</button><button onclick='deleteEntry(this)' id='delete_"
+        entryHtml += "'>Edit</button><button onclick='deleteEntry(this)' class='entryControl' id='delete_"
         entryHtml += diary.entries[i].sortTime
         entryHtml += "'>Delete</button></div></div>"
 		diaryDiv.append(entryHtml);

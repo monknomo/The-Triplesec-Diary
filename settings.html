@@ -35,7 +35,7 @@
 <script src="js/libs/jquery.jkey.js"></script>
 <script src="js/libs/epiceditor.js"></script>
 <script src="js/libs/triplesec-3.0.0-min.js"></script>
-<script src="js/triplesecdiary.js"></script>
+<script src="js/triplesecsettings.js"></script>
   
 </head>
 
@@ -52,32 +52,49 @@
 	</header>
     
     <div id="main" role="main">
-        <div class="help">
-            <h2>What is "The Triplesec Diary?"</h2>
-            <p>It is an encrypted diary/journal that runs in your web browser</p>
-            <h2>How Does It Work?</h2>
-            <p>The Triplesec Diary uses a javascript library called triplesec.js to encrypt your diary before writing it out on your computer.  
-            The app stores your encrypted diary in your browser's local storage.</p>
-            <h2>How Do I Know It is Secure?</h2>
-            <p>At some point we have to trust the encryption software writers.</p>
-            <p>For this apps part, it never sends your diary across the internet, encrypted or otherwise.  It never writes
-            the unecrypted text of your diary to localstorage, it only keeps it in memory.  Whenever you save, the content 
-            of your diary is encrypted, then written to your browser's local storage.</p>
-            <p>Provided you aren't actively using your diary and your computer hasn't been compromized in some manner, you
-            should be safe.</p>
-            <h2>Can the NSA Listen In?</h2>
-            <p>Your actual diary is never sent across the internet, so there is nothing to eavesdrop on.  Of course, since
-            the diary must be decrypted to show it to you on your screen, nothing prevents a trojan from scraping your
-            screen to read your diary.  Also, if you have a trojan, nothing prevents it from simply listening to your
-            keystrokes and recording your password.</p>
-            <p>Practice good sanitation</p>
-            <h2>What are the Passphrase Requirements?</h2>
-            <p>The only requirement is that the passphrase is at least one letter, number or symbol long.  In general, the 
-            longer, the better.  A good technique is to use four or more random dictionary words to create a long, easy 
-            to remember password.  Another good technique that can be used on its own, or in combination with the prior suggestion,
-            is to use a password manager.</p>
-        </div>
-        
+		<div id="changePassphrase" class="setting">
+			<form class="pure-form pure-form-aligned">
+				<fieldset>
+					<legend>Change Passphrase</legend>
+					<div class="pure-control-group">
+						<label for="passphrase">Passphrase: </label>
+						<input id="passphrase" name="passphrase" type="password" onkeypress="handle_passphraseKeypress()"></input>    
+					</div>
+					<div class="pure-control-group">
+						<label for="passphrase">New Passphrase: </label>
+						<input id="passphrase" name="passphrase" type="password" onkeypress="handle_passphraseKeypress()"></input>                
+					</div>
+					<div class="pure-control-group" id="passphraseConfirmGroup">
+						<label for="passphraseConfirm">Confirm New Passphrase: </label>
+						<input id="passphraseConfirm" name="passphraseConfirm" type="password"></input>
+					</div>
+					<div class="pure-controls">
+						<button id="changePassphraseButton" onclick="changePassphrase_onclick()" type="button">Change</button>
+					</div>                
+				</fieldset>
+			</form>
+		</div>
+		<div class="setting">
+			<form class="pure-form">
+				<fieldset>
+					<legend>Delete Diary</legend>
+					<div class="pure-control-group" id="diaryListGroup">
+					</div>
+					<div class="pure-controls">
+						<button id="changePassphraseButton" onclick="changePassphrase_onclick()" type="button">Delete Diary</button>
+					</div>                
+				</fieldset>
+			</form>
+		</div>
+		<div class="setting">
+			Import Diary
+		</div>
+		<div class="setting">
+			Export Diary
+		</div>
+		<div class="setting">
+			<a href="help.html">Help</a>
+		</div>
 	</div>
     
     <footer>Copyright (c) 2013 Gunnar Gissel</footer>
